@@ -1,0 +1,37 @@
+{% extends 'macanda/Admin/header.html' %}
+{% block content %}
+
+{% include 'macanda/Admin/includesnippets.html' %}
+
+<div class="container mt-4">
+
+    <h3 class="mb-3">Logged In Customers</h3>
+
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>#</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Login Time</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in login_customers %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ item.user.username }}</td>
+                <td>{{ item.user.email }}</td>
+                <td>{{ item.login_time }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4" class="text-center">No logged-in customers</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+
+{% endblock %}

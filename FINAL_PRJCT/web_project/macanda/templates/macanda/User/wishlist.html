@@ -1,0 +1,157 @@
+{% extends 'macanda/User/base.html' %}
+{% block content %}
+
+<div class="container my-5">
+    <h3 class="mb-4 text-center">My Wishlist <br><a href="{% url 'home' %}" class="shop-btn">Back to home</a></h3>
+
+    {% if items %}
+    <div class="wishlist-wrapper">
+
+        {% for item in items %}
+        <div class="wishlist-card">
+
+            <!-- Image -->
+            {% if item.product.pdt_image %}
+                <img src="{{ item.product.pdt_image.url }}"
+                     alt="{{ item.product.name }}">
+            {% else %}
+                <div class="no-image">No Image</div>
+            {% endif %}
+
+            <!-- Content -->
+            <div class="wishlist-body">
+                <h6>{{ item.product.name }}</h6>
+                <p>{{ item.product.description }}</p>
+                <div class="price">₹ {{ item.product.price }}</div>
+
+                <div class="wishlist-actions">
+                    <a href="{% url 'add_to_cart' item.id %}" class="btn-cart">
+                        <i class="fa fa-shopping-cart"></i>
+                    </a>
+
+                    <a href="{% url 'remove_wishlist' item.id %}"
+                       class="btn-remove"
+                       title="Remove">
+                        <i class="fa fa-trash"></i>
+                    </a>
+                </div>
+            </div>
+
+        </div>
+        {% endfor %}
+
+    </div>
+    {% else %}
+        <p class="text-center mt-5">Your wishlist is empty.</p>
+    {% endif %}
+</div>
+
+<!-- ===== CSS (INLINE FOR CLARITY — MOVE TO CSS FILE LATER) ===== -->
+<style>
+.wishlist-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: flex-start;
+}
+
+.wishlist-card {
+    width: calc(25% - 20px); /* 4 per row */
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    overflow: hidden;
+    transition: transform 0.2s ease;
+}
+
+.wishlist-card:hover {
+    transform: translateY(-5px);
+}
+
+.wishlist-card img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+}
+
+.no-image {
+    height: 220px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #eee;
+}
+
+.wishlist-body {
+    padding: 15px;
+    text-align: center;
+}
+
+.wishlist-body h6 {
+    margin-bottom: 6px;
+    font-weight: 600;
+}
+
+.wishlist-body p {
+    font-size: 13px;
+    color: #777;
+    margin-bottom: 10px;
+}
+
+.price {
+    font-weight: bold;
+    margin-bottom: 12px;
+}
+
+.wishlist-actions {
+    display: flex;
+    justify-content: space-between;
+}
+
+.btn-cart,
+.btn-remove {
+    width: 48%;
+    padding: 8px 0;
+    text-align: center;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.btn-cart {
+    background: #0d6efd;
+    color: white;
+}
+
+.btn-remove {
+    border: 1px solid #dc3545;
+    color: #dc3545;
+}
+
+.btn-cart:hover {
+    background: #084298;
+}
+
+.btn-remove:hover {
+    background: #dc3545;
+    color: white;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+    .wishlist-card {
+        width: calc(33.33% - 20px);
+    }
+}
+@media (max-width: 768px) {
+    .wishlist-card {
+        width: calc(50% - 20px);
+    }
+}
+@media (max-width: 480px) {
+    .wishlist-card {
+        width: 100%;
+    }
+}
+</style>
+
+{% endblock %}

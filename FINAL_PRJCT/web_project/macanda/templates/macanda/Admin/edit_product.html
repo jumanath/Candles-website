@@ -1,0 +1,29 @@
+{% extends 'macanda/Admin/header.html' %}
+{% block content %}
+
+{% include 'macanda/Admin/includesnippets.html' %}
+
+<div class="container">
+    <div class="card" style="margin-left: 25%; margin-top: 10px;">
+        <div class="card-body">
+
+            <h1 class="text-dark text-center">Update Product Details</h1>
+
+           <form method="post" action="{% url 'updatepdt' pdt.id %}"  enctype="multipart/form-data">
+
+                {% csrf_token %}
+
+                <input type="text"  name="txtname" value="{{ pdt.name }}" class="form-control mb-2" placeholder="Product Name" required>
+                <input type="text" name="price" value="{{pdt.price}}" class="form-control mb-3" placeholder="Enter Price" required>
+                <input type="text" name="txtdescription" value="{{ pdt.description }}" class="form-control mb-2" placeholder="Description" required>
+                <input type="text" name="category" value="{{ pdt.category }}" class="form-control mb-2" placeholder="Category" required>
+                <input type="date" name="mfg_date" value="{{ pdt.mfg_date|date:'Y-m-d' }}" class="form-control mb-2" required>
+                <input type="file" name="pdt_image" class="form-control mb-2">
+                <button type="submit" class="btn btn-success">Update</button>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

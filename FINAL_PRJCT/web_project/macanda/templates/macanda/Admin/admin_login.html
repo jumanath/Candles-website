@@ -1,0 +1,70 @@
+{% extends 'macanda/Admin/header.html' %}
+{% block content %}
+
+
+
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card mt-5">
+
+            <div class="card-header bg-info text-white">
+                <h1 class="d-flex align-items-center gap-2 mb-0">
+                    <i class="bi bi-lock-fill fs-1"></i>
+                    Login
+                </h1>
+            </div>
+
+            <div class="card-body">
+                <form action="{% url 'login_form' %}" method="post">
+                    {% csrf_token %}
+
+                    <!-- Username -->
+                    <div class="mb-3 d-flex align-items-center gap-2">
+                        <label for="username" class="mb-0">
+                            <i class="bi bi-person-fill fs-3 text-dark"></i>
+                        </label>
+                        <input
+                            type="text"
+                            name="txtname"
+                            id="username"
+                            class="form-control"
+                            placeholder="Username"
+                            required
+                        >
+                    </div>
+
+                    <!-- Password -->
+                    <div class="mb-3 d-flex align-items-center gap-2">
+                        <label for="password" class="mb-0">
+                            <i class="bi bi-lock-fill fs-3 text-dark"></i>
+                        </label>
+                        <input
+                            type="password"
+                            name="txtPassword"
+                            id="password"
+                            class="form-control"
+                            placeholder="Password"
+                            required
+                        >
+                    </div>
+
+                    {% if error %}
+                        <p class="text-danger">{{ error }}</p>
+                    {% endif %}
+
+                    <!-- Actions -->
+                    <div class="d-flex align-items-center">
+                        <button type="submit" class="btn btn-primary ms-auto">
+                            Login
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

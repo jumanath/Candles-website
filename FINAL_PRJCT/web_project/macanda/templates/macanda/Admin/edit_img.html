@@ -1,0 +1,23 @@
+{% extends 'macanda/Admin/header.html' %}
+{% block content %}
+
+{% include 'macanda/Admin/includesnippets.html' %}
+
+<div class="container">
+    <div class="card" style="margin-left: 25%; margin-top: 10px;">
+        <div class="card-body">
+
+            <h1 class="text-dark text-center">Update images</h1>
+
+            <form method="post" action="{% url 'updateimg' image.id %}" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <input type="file" name="image" class="form-control mb-2" required>
+                <button type="submit" class="btn btn-success">Update</button>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}
