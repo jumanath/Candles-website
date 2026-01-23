@@ -50,7 +50,8 @@ urlpatterns = [
 
     # MANAGE_ORDERS&CUSTOMERS
 
-    re_path(r'manage_orders_customers',views.manage_orders_cusomers,name='manage_orders_customers'),
+    re_path(r'manage_orders_customers',views.manage_orders_customers,name='manage_orders_customers'),
+
     
 # USER
     re_path(r'^$',views.mainscreen,name='mainscreen'),
@@ -75,10 +76,19 @@ urlpatterns = [
     # PAYMENT
         re_path('create-order/', views.create_order, name='create_order'),
         re_path(r'^payment/(\d+)/$', views.payment_page, name='payment_page'),
+        re_path(r"save-order", views.save_order, name="save_order"),
 
-    # MANAGER   
-        re_path(r'manager', views.manager, name='manager'),       
-        
+    # MANAGER  
+    re_path(r'manager_home',views.manager_home,name='manager_home') ,
+    re_path(r'manager', views.manager, name='manager'),
+    re_path(r'^delivery', views.delivery_list, name='delivery_register'),
+    re_path(r'^delivery/add', views.delivery_send_otp, name='delivery_add'),
+    re_path(r'^delivery/verify-otp', views.delivery_verify_otp, name='delivery_verify_otp'),
+    re_path(r'^delivery/edit/(\d+)/$', views.delivery_edit, name='delivery_edit'),
+    re_path(r'^delivery/delete/(\d+)/$', views.delivery_delete, name='delivery_delete'),
+    re_path(r'^delivery/success', views.delivery_success, name='delivery_success'),
+    re_path(r'^delivery/view', views.delivery_view, name='delivery_view'),
+
 
 
 

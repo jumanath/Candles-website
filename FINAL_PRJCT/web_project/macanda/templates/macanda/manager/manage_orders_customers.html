@@ -1,0 +1,71 @@
+{% extends 'macanda/manager/header.html' %}
+{% block content %}
+
+
+<div class="container mt-4">
+
+    <!-- REGISTERED CUSTOMERS TABLE -->
+    <h3 class="mb-3">Registered Customers</h3>
+
+    <table class="table table-bordered table-striped mb-5">
+        <thead class="table-dark">
+            <tr>
+                <th>#</th>
+                <th>Email</th>
+                <th>Registered On</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ user.username }}</td>
+                <td>{{ user.date_joined }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="3" class="text-center">
+                    No registered customers
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- ORDERS TABLE  -->
+    <h3 class="mb-3">Payment / Product Orders</h3>
+
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>#</th>
+                <th>Customer Email</th>
+                <th>Product</th>
+                <th>Amount</th>
+                <th>Status</th>
+                <th>Ordered On</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in orders %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ order.user.username }}</td>
+                <td>{{ order.product.name }}</td>
+                <td>₹{{ order.amount }}</td>
+                <td>{{ order.status }}</td>
+                <td>{{ order.created_at }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" class="text-center">
+                    No orders found
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+
+{% endblock %}

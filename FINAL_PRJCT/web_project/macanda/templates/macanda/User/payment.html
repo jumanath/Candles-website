@@ -9,31 +9,93 @@
 
 <p>Amount: ₹{{ amount|floatformat:2 }}</p>
 
-<button id="pay-btn">Pay Now</button>
+<h4>Select Payment Method</h4>
 
-<!-- Razorpay script -->
+<label>
+    <input type="radio" name="payment_method" value="Online" checked>
+    Online Payment
+</label><br>
+
+<label>
+    <input type="radio" name="payment_method" value="COD">
+    Cash on Delivery
+</label><br><br>
+
+<button id="pay-btn">Proceed</button>
+
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
 <script>
-var options = {
-    "key": "{{ razorpay_key }}",
-    "amount": "{{ amount }}",
-    "currency": "INR",
-    "order_id": "{{ order_id }}",
-    "name": "My Django App",
-    "description": "Order Payment",
-    "handler": function (response) {
-        alert("Payment Successful!");
-        console.log(response);
-    }
-};
+var payBtn = document.getElementById("pay-btn");
 
-var rzp = new Razorpay(options);
-
-document.getElementById("pay-btn").onclick = function(e){
-    rzp.open();
+payBtn.onclick = function (e) {
     e.preventDefault();
-}
+
+    let paymentMethod = document.querySelector('input[name="payment_method"]:checked').value;
+
+    // ✅ CASE 1: CASH ON DELIVERY
+    if (paymentMethod === "COD") {
+        fetch("/save-order/", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": "{{ csrf_token }}"
+            },
+            body: JSON.stringify({
+                product_id: "{{ product.id }}",
+                amount: "{{ amount }}",
+                payment_status: "Pending",
+                payment_method: "COD"
+            })
+        })
+        .then(res => res.json())
+        .then(data => {
+            alert("Order placed with Cash on Delivery");
+            window.location.href = "/";
+        });
+        return;
+    }
+
+    // ✅ CASE 2: ONLINE PAYMENT
+    var options = {
+        key: "{{ razorpay_key }}",
+        amount: "{{ amount }}",
+        currency: "INR",
+        name: "MACAND",
+        description: "Order Payment",
+
+        handler: function (response) {
+            fetch("/save-order/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": "{{ csrf_token }}"
+                },
+                body: JSON.stringify({
+                    product_id: "{{ product.id }}",
+                    amount: "{{ amount }}",
+                    payment_status: "Paid",
+                    payment_method: "Online",
+                    razorpay_payment_id: response.razorpay_payment_id
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                alert("Payment Successful");
+                window.location.href = "/";
+            });
+        },
+
+        modal: {
+            ondismiss: function () {
+                alert("Payment Cancelled");
+            }
+        }
+    };
+
+    var rzp = new Razorpay(options);
+    rzp.open();
+};
 </script>
 
 </body>

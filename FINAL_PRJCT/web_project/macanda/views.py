@@ -1,13 +1,21 @@
+from datetime import timedelta, timezone
+import json
+import random
 from django.shortcuts import render, redirect
+from django.urls import reverse
 from .models import *
 from django.contrib.auth import authenticate, login,logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 import razorpay
 from django.conf import settings
-from django.http import JsonResponse
-
-
+from django.http import HttpResponse, JsonResponse
+import random
+from .models import DeliveryBoy, DeliveryBoyOTP
+from django.shortcuts import render, redirect
+from django.core.mail import send_mail
+from django.utils import timezone
+from .models import DeliveryBoy
 
 ''' ADMIN '''
 
@@ -228,8 +236,19 @@ def updatecarousal(request, carousalid):
 
 # MANAGE_ORDERS&CUSTOMERS
 
-def manage_orders_cusomers(request):
-    return render(request,'macanda/Admin/manage_orders_customers.html')
+def manage_orders_customers(request):
+    users = User.objects.filter(is_staff=False)
+    orders = Order.objects.select_related('user', 'product').order_by('-id')
+
+    return render(
+        request,
+        'macanda/manager/manage_orders_customers.html',
+        {
+            'users': users,
+            'orders': orders
+        }
+    )
+
 
 
 
@@ -252,10 +271,6 @@ def home(request):
 def mainscreen(request):
     return render(request,'macanda/User/mainscreen.html')
 
-from django.contrib.auth import authenticate, login
-from django.shortcuts import render, redirect
-from django.contrib.auth.models import User
-from .models import LoginCustomer
 
 
 def user_login(request):
@@ -268,7 +283,6 @@ def user_login(request):
         if user is not None:
             login(request, user)
 
-            # SAVE LOGIN CUSTOMER
             LoginCustomer.objects.create(user=user)
 
             return redirect('home')
@@ -279,6 +293,7 @@ def user_login(request):
 
     return render(request, 'macanda/User/user_login.html')
 
+# USER_REGISTER
 
 def register(request):
     if request.method == "POST":
@@ -306,12 +321,13 @@ def register(request):
     return render(request, 'macanda/User/register.html')
 
 
-
+# """"""""LOGOUT"""""""
 
 def logout_view(request):
     logout(request)
     return redirect('user_login')
 
+# """"""""ADD_TO_WISHLIST"""""""
 
 @login_required
 def add_to_wishlist(request, product_id):
@@ -397,34 +413,178 @@ def create_order(request):
         'amount': amount,
         'key': settings.RAZORPAY_KEY_ID
     })
-
 def payment_page(request, product_id):
     product = Product.objects.get(id=product_id)
 
-    return render(request, 'macanda/User/payment.html', {
-        'amount': int(product.price * 100),  # paise
+    return render(request, 'macanda/manager/payment.html', {
+        'product': product,
+        'amount': int(product.price * 100),  # paise for Razorpay
         'razorpay_key': settings.RAZORPAY_KEY_ID,
     })
 
-# MANAGER MODULE
-
-def manager(request):
-    return render(request, 'macanda/manager/manager.html')
 
 
+@login_required
+def save_order(request):
+    if request.method != "POST":
+        return JsonResponse({"error": "Invalid request"}, status=400)
 
+    try:
+        data = json.loads(request.body)
 
+        product = Product.objects.get(id=data["product_id"])
+        payment_method = data["payment_method"]
+        payment_status = data["payment_status"]
 
+        # 🔐 Server-side validation
+        if payment_method == "COD":
+            payment_status = "Pending"
+            order_status = "Confirmed"
+        elif payment_method == "Online":
+            payment_status = "Paid"
+            order_status = "Confirmed"
+        else:
+            return JsonResponse({"error": "Invalid payment method"}, status=400)
 
+        Order.objects.create(
+            user=request.user,
+            product=product,
+            amount=product.price,  # rupees
+            payment_method=payment_method,
+            payment_status=payment_status,
+            status=order_status
+        )
 
+        return JsonResponse({
+            "success": True,
+            "redirect_url": reverse("home")
+        })
 
+    except Product.DoesNotExist:
+        return JsonResponse({"error": "Product not found"}, status=404)
 
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=500)
     
 
 
+# MANAGER MODULE
 
 
+def manager_home(request):
+    return render(request, 'macanda/manager/manager_home.html')
 
+
+def manager(request):
+    paid_orders = Order.objects.filter(payment_status="Paid").select_related('user', 'product')
+
+    return render(
+        request,
+        'macanda/manager/manager.html',
+        {
+            'paid_orders': paid_orders
+        }
+    )
+
+def delivery_edit(request, id):
+    try:
+        boy = DeliveryBoy.objects.get(id=id)
+    except DeliveryBoy.DoesNotExist:
+        return HttpResponse("Delivery boy not found", status=404)
+
+    if request.method == 'POST':
+        boy.name = request.POST['name']
+        boy.phone = request.POST['phone']
+        boy.email = request.POST.get('email')
+        boy.address = request.POST['address']
+        boy.save()
+        return redirect('delivery_register')
+
+    return render(request, 'macanda/manager/edit_delivery.html', {'boy': boy})
+def delivery_delete(request, id):
+    try:
+        boy = DeliveryBoy.objects.get(id=id)
+    except DeliveryBoy.DoesNotExist:
+        return HttpResponse("Delivery boy not found", status=404)
+
+    boy.delete()
+    return redirect('delivery_register')
+def delivery_list(request):
+    delivery_boys = DeliveryBoy.objects.all()
+    return render(request, 'macanda/manager/delivery_list.html', {
+        'delivery_boys': delivery_boys
+    })
+def delivery_add(request):
+    if request.method == 'POST':
+        DeliveryBoy.objects.create(
+            name=request.POST['name'],
+            phone=request.POST['phone'],
+            email=request.POST.get('email'),
+            vehicle_no=request.POST['vehicle_no']
+        )
+        return redirect('delivery_register')
+
+    return render(request, 'macanda/manager/delivery_add.html')
+
+
+def delivery_send_otp(request):
+    if request.method == 'POST':
+        otp = str(random.randint(100000, 999999))
+        phone = request.POST['phone']
+
+        DeliveryBoyOTP.objects.create(
+            phone=phone,
+            otp=otp,
+            expires_at=timezone.now() + timedelta(minutes=1)
+        )
+
+        # TEMP: print OTP in console (SMS later)
+        print("OTP:", otp)
+
+        request.session['delivery_data'] = request.POST.dict()
+        return redirect('delivery_verify_otp')
+
+    return render(request, 'macanda/manager/delivery_add.html')
+def delivery_verify_otp(request):
+    if request.method == 'POST':
+        otp_entered = request.POST['otp']
+        phone = request.session['delivery_data']['phone']
+
+        try:
+            record = DeliveryBoyOTP.objects.filter(phone=phone).latest('id')
+        except DeliveryBoyOTP.DoesNotExist:
+            return HttpResponse("OTP not found")
+
+        if record.is_expired():
+            return HttpResponse("OTP expired")
+
+        if record.otp != otp_entered:
+            return HttpResponse("Invalid OTP")
+
+        data = request.session['delivery_data']
+
+        DeliveryBoy.objects.create(
+            name=data['name'],
+            phone=data['phone'],
+            email=data.get('email'),
+            vehicle_no=data['vehicle_no']
+        )
+
+        # 🔥 CLEAN UP
+        record.delete()
+        del request.session['delivery_data']
+
+        return redirect('delivery_success')
+
+    return render(request, 'macanda/manager/verify_otp.html')
+def delivery_success(request):
+    return render(request, 'macanda/manager/success.html')
+
+def delivery_view(request):
+    boys = DeliveryBoy.objects.all()
+    return render(request, 'macanda/manager/delivery_view.html', {
+        'boys': boys
+    })
 
 
 

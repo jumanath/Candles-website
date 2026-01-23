@@ -1,0 +1,31 @@
+<h2>Delivery Boys</h2>
+<a href="{% url 'delivery_add' %}">+ Add Delivery Boy</a>
+
+
+<table border="1" width="100%">
+    <tr>
+        <th>Name</th>
+        <th>Phone</th>
+        <th>Email</th>
+        <th>Action</th>
+    </tr>
+    {% for boy in delivery_boys %}
+    <tr>
+        <td>{{ boy.name }}</td>
+        <td>{{ boy.phone }}</td>
+        <td>{{ boy.email|default:"-" }}</td>
+        <td>
+      <a href="{% url 'delivery_edit' id=boy.id %}">Edit</a>
+
+
+
+            <a href="{% url 'delivery_delete' boy.id %}"
+               onclick="return confirm('Delete?')">Delete</a>
+        </td>
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="4" align="center">No delivery boys</td>
+    </tr>
+    {% endfor %}
+</table>

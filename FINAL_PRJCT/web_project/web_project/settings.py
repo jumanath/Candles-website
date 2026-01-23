@@ -127,5 +127,13 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'macanda/static/media')
 
 RAZORPAY_KEY_ID = os.environ.get("RAZORPAY_KEY_ID", "rzp_test_RmboxNgTbFao5A")
 RAZORPAY_KEY_SECRET = os.environ.get("RAZORPAY_KEY_SECRET","bMwCYM71Vt0NU5raH5XND")
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+LOGIN_URL = 'user_login'
+
+EMAIL_HOST_USER = 'fathimajumanath.bs@gmail.com' 
+EMAIL_HOST_PASSWORD  = 'heir yqiz sawp mhfz'
 
 
