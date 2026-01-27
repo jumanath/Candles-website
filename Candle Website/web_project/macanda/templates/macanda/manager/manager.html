@@ -1,0 +1,88 @@
+{% block content %}
+
+<style>
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background-color: #1e293b;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+    }
+
+    .manager-wrapper {
+        width: 360px;
+        background-color: #1e293b;
+        padding: 35px;
+        border-radius: 12px;
+        box-shadow: 0 12px 35px rgba(0, 0, 0, 0.45);
+    }
+
+    .manager-wrapper h2 {
+        text-align: center;
+        color: #ffffff;
+        margin-bottom: 30px;
+        font-size: 24px;
+    }
+
+    .manager-wrapper ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .manager-wrapper ul li {
+        margin-bottom: 15px;
+    }
+
+    .manager-wrapper ul li a {
+        display: block;
+        padding: 15px;
+        background-color: #334155;
+        color: #ffffff;
+        text-decoration: none;
+        border-radius: 8px;
+        text-align: center;
+        font-weight: 500;
+        transition: background 0.3s, transform 0.2s;
+    }
+
+    .manager-wrapper ul li a:hover {
+        background-color: #475569;
+        transform: translateY(-2px);
+    }
+</style>
+
+<div class="manager-wrapper">
+    <h2>Manager Module</h2>
+    <p style="margin-left: 30%;"><a href="{% url 'mainscreen' %}">Bach to home page</a></p>
+
+    <ul>
+        <li>
+            <a href="{% url 'payment_options' %}">
+                Payment Products
+            </a>
+        </li>
+
+        <li>
+            <a href="{% url 'deliveryman_register' %}">
+                Delivery Man Register
+            </a>
+        </li>
+
+        <li>
+            <a href="{% url 'view_deliveryman' %}">
+                View Registered Delivery Man
+            </a>
+        </li>
+
+        <li>
+            <a href="{% url 'manage_orders_customers' %}">
+                Registered Customers
+            </a>
+        </li>
+    </ul>
+</div>
+
+{% endblock %}

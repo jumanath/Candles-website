@@ -1,0 +1,73 @@
+{% block content %}
+
+<style>
+    .page-center {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #1e293b;
+        z-index: 999;
+    }
+
+    .admin-wrapper {
+        width: 420px;
+        background-color: #1e293b;
+        padding: 35px;
+        border-radius: 12px;
+        box-shadow: 0 12px 35px rgba(0, 0, 0, 0.45);
+            font-family: 'Inter', sans-serif;
+    }
+
+    .admin-wrapper h2 {
+        text-align: center;
+        color: #ffffff;
+        margin-bottom: 30px;
+        font-size: 24px;
+    }
+
+    .admin-wrapper ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .admin-wrapper ul li {
+        margin-bottom: 15px;
+    }
+
+    .admin-wrapper ul li a {
+        display: block;
+        padding: 15px;
+        background-color: #334155;
+        color: #ffffff;
+        text-decoration: none;
+        border-radius: 8px;
+        text-align: center;
+        font-weight: 500;
+        transition: background 0.3s, transform 0.2s;
+    }
+
+    .admin-wrapper ul li a:hover {
+        background-color: #475569;
+        transform: translateY(-2px);
+    }
+</style>
+
+<div class="page-center">
+    <div class="admin-wrapper">
+        <h2>Admin Module</h2>
+        <p style="margin-left: 35%;"><a href="{% url 'mainscreen' %}">Bach to home page</a></p>
+        <ul>
+            <li><a href="{% url 'viewfile' %}">Manage Image</a></li>
+            <li><a href="{% url 'manage_products' %}">Manage Categories & Products</a></li>
+            <li><a href="{% url 'manage_offer' %}">Manage Offers / Discounts</a></li>
+            <li><a href="{% url 'manage_carousal' %}">Manage Carousal Image</a></li>
+            <li><a href="#">View Stock Alerts</a></li>
+            <li><a href="#">View Reports: Sales, Revenue, Inventory</a></li>
+        </ul>
+    </div>
+</div>
+
+{% endblock %}

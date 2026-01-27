@@ -1,0 +1,149 @@
+{% extends 'macanda/User/base.html' %}
+{% block content %}
+
+<div class="container my-5">
+    <h3 class="mb-4 text-center">My Cart<br><a href="{% url 'home' %}" class="shop-btn">Back to home</a></h3>
+
+    {% if cart_items %}
+    <div class="cart-wrapper">
+
+        {% for item in cart_items %}
+        <div class="cart-card">
+
+            <!-- Image -->
+            {% if item.product.pdt_image %}
+                <img src="{{ item.product.pdt_image.url }}"
+                     alt="{{ item.product.name }}">
+            {% else %}
+                <div class="no-image">No Image</div>
+            {% endif %}
+
+            <!-- Content -->
+            <div class="cart-body">
+                <h6>{{ item.product.name }}</h6>
+                <p>{{ item.product.description }}</p>
+
+                <div class="price">
+                    ₹ {{ item.product.price }}
+                </div>
+
+                <div class="cart-actions">
+
+                    <!-- PAY BUTTON (ADDED) -->
+                    <a href="{% url 'payment_page' item.product.id %}"
+                       class="btn-cart"
+                       title="Pay Now">
+                        Pay
+                    </a>
+
+                    <!-- Remove from cart -->
+                    <a href="{% url 'remove_cart' item.id %}"
+                       class="btn-remove"
+                       title="Remove from cart">
+                        <i class="fa fa-trash"></i>
+                    </a>
+
+                </div>
+            </div>
+
+        </div>
+        {% endfor %}
+
+    </div>
+    {% else %}
+        <p class="text-center mt-5">Your cart is empty.</p>
+    {% endif %}
+</div>
+
+<style>
+.cart-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: flex-start;
+}
+
+.cart-card {
+    width: calc(25% - 20px); 
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    overflow: hidden;
+    transition: transform 0.2s ease;
+}
+
+.cart-card:hover {
+    transform: translateY(-5px);
+}
+
+.cart-card img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+}
+
+.no-image {
+    height: 220px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #eee;
+}
+
+.cart-body {
+    padding: 15px;
+    text-align: center;
+}
+
+.cart-body h6 {
+    margin-bottom: 6px;
+    font-weight: 600;
+}
+
+.cart-body p {
+    font-size: 13px;
+    color: #777;
+    margin-bottom: 10px;
+}
+
+.price {
+    font-weight: bold;
+    margin-bottom: 12px;
+}
+
+.cart-actions {
+    display: flex;
+    justify-content: space-between;
+}
+
+.btn-cart,
+.btn-remove {
+    width: 48%;
+    padding: 8px 0;
+    text-align: center;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.btn-cart {
+    background: #0d6efd;
+    color: white;
+    text-decoration: none;
+}
+
+.btn-remove {
+    border: 1px solid #dc3545;
+    color: #dc3545;
+}
+
+.btn-cart:hover {
+    background: #084298;
+}
+
+.btn-remove:hover {
+    background: #dc3545;
+    color: white;
+}
+</style>
+
+{% endblock %}

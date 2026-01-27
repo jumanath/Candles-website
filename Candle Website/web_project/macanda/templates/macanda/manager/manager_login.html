@@ -1,0 +1,95 @@
+{% extends 'macanda/manager/header.html' %}
+{% block content %}
+
+<style>
+    .admin-login-wrapper {
+        position: fixed;
+        inset: 0;
+        background-color:white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1;
+    }
+
+    .admin-login-wrapper .card {
+        box-shadow: 0 12px 35px rgba(0, 0, 0, 0.45);
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    .admin-login-wrapper .card-header {
+        background-color: #334155 !important;
+    }
+
+    .admin-login-wrapper h1 {
+        font-size: 26px;
+        color: #ffffff;
+    }
+</style>
+
+<div class="admin-login-wrapper">
+
+    <div class="row justify-content-center w-100">
+        <div class="col-md-6 col-lg-4">
+            <div class="card">
+
+                <div class="card-header text-white">
+                    <h1 class="d-flex align-items-center gap-2 mb-0">
+                        <i class="bi bi-lock-fill fs-1"></i>
+                        Login
+                    </h1>
+                </div>
+
+                <div class="card-body">
+                    <form action="{% url 'manager_form' %}" method="post">
+                        {% csrf_token %}
+
+                        <div class="mb-3 d-flex align-items-center gap-2">
+                            <label for="username" class="mb-0">
+                                <i class="bi bi-person-fill fs-3 text-dark"></i>
+                            </label>
+                            <input
+                                type="text"
+                                name="txtname"
+                                id="username"
+                                class="form-control"
+                                placeholder="Username"
+                                required
+                            >
+                        </div>
+
+                        <div class="mb-3 d-flex align-items-center gap-2">
+                            <label for="password" class="mb-0">
+                                <i class="bi bi-lock-fill fs-3 text-dark"></i>
+                            </label>
+                            <input
+                                type="password"
+                                name="txtPassword"
+                                id="password"
+                                class="form-control"
+                                placeholder="Password"
+                                required
+                            >
+                        </div>
+
+                        {% if error %}
+                            <p class="text-danger">{{ error }}</p>
+                        {% endif %}
+
+                        <div class="d-flex align-items-center">
+                            <button type="submit" class="btn btn-primary ms-auto">
+                                Login
+                            </button>
+                        </div>
+
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

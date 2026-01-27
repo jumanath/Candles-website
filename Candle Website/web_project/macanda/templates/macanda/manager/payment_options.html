@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Options</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #1e293b;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .payment-wrapper {
+            width: 420px;
+            background-color: #0f172a;
+            padding: 40px;
+            border-radius: 14px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+
+        .payment-wrapper h3 {
+            color: #ffffff;
+            margin-bottom: 30px;
+            font-size: 26px;
+        }
+
+        .payment-btn {
+            display: block;
+            padding: 16px;
+            margin-bottom: 18px;
+            font-size: 18px;
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: 10px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .payment-btn.paid {
+            background-color: #16a34a;
+            color: #ffffff;
+        }
+
+        .payment-btn.cod {
+            background-color: #f59e0b;
+            color: #000000;
+        }
+
+        .payment-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="payment-wrapper">
+        <h3>Payment Orders</h3>
+        <p style="margin-left: 3%;"><a href="{% url 'manager' %}">Bach to manager module</a></p>
+
+        <a href="{% url 'paid_orders' %}" class="payment-btn paid">
+            Paid Orders
+        </a>
+
+        <a href="{% url 'cod_orders' %}" class="payment-btn cod">
+            Cash On Delivery Orders
+        </a>
+    </div>
+
+</body>
+</html>

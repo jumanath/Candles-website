@@ -1,0 +1,39 @@
+{% extends 'macanda/Admin/header.html' %}
+{% block content %}
+
+
+<div class="container d-flex justify-content-center mt-4">
+    <div class="card shadow-lg" style="width: 520px; height: 70%;">
+        <div class="card-body">
+
+            <h3 class="text-center mb-4 text-dark">Product Registration</h3>
+
+            <form method="post" action="{% url 'createproduct' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <!-- BIG IMAGE INPUT FIRST -->
+                <div class="mb-3">
+                    <input type="file" name="pdt_image" class="form-control p-3" required>
+                </div>
+                <!-- INPUTS WITH PLACEHOLDERS ONLY -->
+                <input type="text" name="txtname" class="form-control mb-3" placeholder="Enter Product Name" required>
+                <input type="text" name="price" class="form-control mb-3" placeholder="Enter price" required>
+                <input type="text" name="txtdescription" class="form-control mb-3" placeholder="Enter Description" required>
+                <input type="text" name="category" class="form-control mb-3" placeholder="Enter Category" required>
+                <input type="date" name="mfg_date" class="form-control mb-4" required>
+                <button type="submit"class="btn btn-info w-100"> Register</button>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
+
+
+
+
+
+
+

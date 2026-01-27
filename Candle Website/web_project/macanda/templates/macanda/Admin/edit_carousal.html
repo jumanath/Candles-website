@@ -1,0 +1,36 @@
+{% extends 'macanda/Admin/header.html' %}
+{% block content %}
+
+
+<div class="container d-flex justify-content-center mt-4">
+    <div class="card shadow-lg" style="width: 520px; height: 50%;">
+        <div class="card-body">
+
+            <h3 class="text-center mb-4 text-dark">Edit Carousel Image</h3> 
+
+            <!-- CURRENT IMAGE PREVIEW -->
+            <div class="text-center mb-3">
+                <img src="{{ carousal.image.url }}" 
+                     style="height:150px; object-fit:contain;"
+                     class="img-fluid">
+            </div>
+
+            <form method="post" action="{% url 'updatecarousal' carousal.id %}" enctype="multipart/form-data">
+                {% csrf_token %} 
+
+                <!-- NEW IMAGE -->
+                 <div class="mb-4">
+                    <input type="file" name="image" class="form-control p-3">
+                </div>
+
+                <button type="submit" class="btn btn-warning w-100">
+                    Update Image
+                </button>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends 'macanda/manager/header.html' %}
+{% block content %}
+
+
+<div class="container mt-4">
+
+    <!-- REGISTERED CUSTOMERS TABLE -->
+    <h3 class="mb-3">Registered Customers</h3>
+
+    <table class="table table-bordered table-striped mb-5">
+        <thead class="table-dark">
+            <tr>
+                <th>#</th>
+                <th>Email</th>
+                <th>Registered On</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ user.username }}</td>
+                <td>{{ user.date_joined }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="3" class="text-center">
+                    No registered customers
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    
+
+</div>
+
+{% endblock %}

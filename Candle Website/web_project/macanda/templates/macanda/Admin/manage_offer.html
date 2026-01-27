@@ -1,0 +1,47 @@
+{% extends 'macanda/Admin/header.html' %}
+{% block content %}
+
+<style>
+    body {
+        background-color: #1e293b;
+    }
+
+    h1 {
+        color: #ffffff;
+    }
+</style>
+
+<div class="container">
+    <h1 class="text-center">Discount Management</h1>
+    <p style="margin-left: 43%;"><a href="{% url 'admin_home' %}">Bach to admin panel</a></p>
+
+    <div class="text-center">
+        <a href="{% url 'newoffer' %}" class="btn btn-primary mt-2">Add Offer</a>
+    </div>
+
+    <table class="table table-bordered text-center mt-4 bg-white">
+        <tr>
+            <th>Product ID</th>
+            <th>Discount Percent</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Action</th>
+        </tr>
+
+        {% for offer in Offer %}
+        <tr>
+            <td>{{ offer.product_id }}</td>
+            <td>{{ offer.discount_percent }}</td>
+            <td>{{ offer.start_date }}</td>
+            <td>{{ offer.end_date }}</td>
+            <td>
+                <a href="{% url 'edit_offer' offer.id %}" class="btn btn-warning btn-sm">Edit</a>
+                <a href="{% url 'deleteoffer' offer.id %}" class="btn btn-danger btn-sm">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+
+</div>
+
+{% endblock %}

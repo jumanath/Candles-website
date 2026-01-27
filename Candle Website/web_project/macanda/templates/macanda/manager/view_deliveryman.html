@@ -1,0 +1,62 @@
+{% extends 'macanda/manager/header.html' %}
+{% block content %}
+
+<style>
+    body { background-color: #1e293b; }
+
+    .delivery-wrapper { padding: 40px; }
+
+    .delivery-wrapper h3 {
+        color: #ffffff;
+        text-align: center;
+        margin-bottom: 25px;
+    }
+
+    table {
+        background-color: #0f172a;
+        color: #ffffff;
+    }
+
+    th {
+        background-color: #334155;
+        color: #ffffff;
+    }
+
+    td, th {
+        text-align: center;
+        vertical-align: middle;
+    }
+</style>
+
+<div class="delivery-wrapper">
+    <h3>Registered Delivery Man</h3>
+
+    <table class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Vehicle No</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for boy in delivery_boys %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ boy.name }}</td>
+                <td>{{ boy.email }}</td>
+                <td>{{ boy.phone }}</td>
+                <td>{{ boy.vehicle_no }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5">No delivery boys registered.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

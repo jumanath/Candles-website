@@ -1,0 +1,30 @@
+{% extends 'macanda/Admin/header.html' %}
+{% block content %}
+
+
+<div class="container d-flex justify-content-center mt-4">
+    <div class="card shadow-lg" style="width: 520px; height: 65%;">
+        <div class="card-body">
+
+            <h3 class="text-center mb-4 text-dark">Offer Registration</h3>
+            {% if error %}
+                <p class="text-danger text-center">{{ error }}</p>
+            {% endif %}
+
+
+            <form method="post" action="{% url 'createoffer' %}">
+                {% csrf_token %}
+
+                <input type="number" name="product_id" class="form-control mb-3" placeholder="Enter Product ID" required>
+                <input type="number" name="discount_percent" class="form-control mb-3" placeholder="Discount Percentage" min="1" max="100"  required>
+                <input type="date" name="start_date" class="form-control mb-3">
+                <input type="date" name="end_date" class="form-control mb-4">
+                <button type="submit" class="btn btn-info w-100"> Register Offer </button>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

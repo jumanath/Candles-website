@@ -1,0 +1,44 @@
+{% extends 'macanda/Admin/header.html' %}
+{% block content %}
+
+<style>
+    body {
+        background-color: #1e293b;
+    }
+
+    h1 {
+        color: #ffffff;
+    }
+</style>
+
+<div class="container mt-4">
+
+    <h1 class="text-center mb-4">Image Management</h1>
+    <p style="margin-left: 43%;"><a href="{% url 'admin_home' %}">Bach to admin panel</a></p>
+
+    <div class="text-center mb-3">
+        <a href="{% url 'fileupload' %}" class="btn btn-primary">Add Image</a>
+    </div>
+
+    <div class="row justify-content-center">
+        {% for item in images %}
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-lg h-100">
+                <div class="card-body text-center">
+
+                    <img src="{{ item.image.url }}" class="img-fluid mb-3" style="height:150px;">
+
+                    <div>
+                        <a href="{% url 'editimg' item.id %}" class="btn btn-warning btn-sm">Edit</a>
+                        <a href="{% url 'deleteimage' item.id %}" class="btn btn-danger btn-sm">Delete</a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+</div>
+
+{% endblock %}

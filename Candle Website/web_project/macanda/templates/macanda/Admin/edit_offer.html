@@ -1,0 +1,24 @@
+{% extends 'macanda/Admin/header.html' %}
+{% block content %}
+
+
+<div class="container">
+    <div class="card" style="margin-left: 25%; margin-top: 10px;">
+        <div class="card-body">
+
+            <h1 class="text-dark text-center">Update Product Details</h1>
+
+           <form method="post" action="{% url 'updateoffer' offer.id %}" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <input type="text" name="discount_percent" value="{{ offer.discount_percent}}" class="form-control mb-2" placeholder="Discount" required>
+                <input type="date" name="start_date" value="{{ offer.start_date|date:'Y-m-d' }}" class="form-control mb-2" placeholder="start_Date" required>
+                <input type="date" name="end_date" value="{{ offer.end_date|date:'Y-m-d' }}" class="form-control mb-2" placeholder="end_Date" required>
+                <button type="submit" class="btn btn-success">Update</button>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

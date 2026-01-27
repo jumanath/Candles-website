@@ -1,0 +1,75 @@
+{% extends 'macanda/manager/header.html' %}
+{% block content %}
+
+<style>
+    body { background-color: #1e293b; }
+
+    .register-wrapper {
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .register-card {
+        width: 420px;
+        background-color: #0f172a;
+        padding: 35px;
+        border-radius: 12px;
+        box-shadow: 0 12px 35px rgba(0, 0, 0, 0.45);
+    }
+
+    .register-card h3 {
+        color: #ffffff;
+        text-align: center;
+        margin-bottom: 25px;
+    }
+
+    label { color: #cbd5f5; }
+</style>
+
+<div class="register-wrapper">
+    <div class="register-card">
+        <h3>Delivery Man Registration</h3>
+
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="mb-3">
+                <label>Full Name</label>
+                <input type="text" class="form-control" name="name" required>
+            </div>
+
+            <div class="mb-3">
+                <label>Email</label>
+                <input type="email" class="form-control" name="email" required>
+            </div>
+
+            <div class="mb-3">
+                <label>Phone Number</label>
+                <input type="text" class="form-control" name="phone" required>
+            </div>
+
+            <div class="mb-3">
+                <label>Vehicle Number</label>
+                <input type="text" class="form-control" name="vehicle_no" required>
+            </div>
+
+            <div class="mb-3">
+                <label>Password</label>
+                <input type="password" class="form-control" name="password" required>
+            </div>
+
+            <div class="mb-3">
+                <label>Confirm Password</label>
+                <input type="password" class="form-control" name="confirm_password" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">
+                Register
+            </button>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
