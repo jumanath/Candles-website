@@ -30,6 +30,27 @@
 
 <div class="delivery-wrapper">
     <h3>Registered Delivery Man</h3>
+    <p style="margin-left: 25rem;"><a href="{% url 'manager' %}">Bach to manager module</a></p>
+<button
+    class="btn btn-sm btn-warning"
+    style="
+        margin-left: 27rem;
+        padding: 8px 18px;
+        font-weight: 600;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+        margin-bottom: 10px;
+    "
+>
+    <a
+        href="{% url 'deliveryman_register' %}"
+        style="
+            text-decoration: none;
+            color: #1e293b;
+        "
+    >
+        + Add Deliveryman
+    </a>
+</button>
 
     <table class="table table-bordered table-hover">
         <thead>
@@ -39,6 +60,7 @@
                 <th>Email</th>
                 <th>Phone</th>
                 <th>Vehicle No</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -49,10 +71,14 @@
                 <td>{{ boy.email }}</td>
                 <td>{{ boy.phone }}</td>
                 <td>{{ boy.vehicle_no }}</td>
+                <td>
+                    <a href="{% url 'edit_deliveryman' boy.id %}" class="btn btn-sm btn-warning">Edit</a>
+                    <a href="{% url 'delete_deliveryman' boy.id %}" class="btn btn-sm btn-danger">Delet</a>
+                </td>
             </tr>
             {% empty %}
             <tr>
-                <td colspan="5">No delivery boys registered.</td>
+                <td colspan="6">No delivery boys registered.</td>
             </tr>
             {% endfor %}
         </tbody>

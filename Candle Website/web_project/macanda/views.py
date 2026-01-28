@@ -1,6 +1,7 @@
-from datetime import timedelta, timezone
+import email
 import json
 import random
+from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from .models import *
@@ -10,12 +11,9 @@ from django.contrib.auth.models import User
 import razorpay
 from django.conf import settings
 from django.http import HttpResponse, JsonResponse
-import random
-from .models import DeliveryBoy, DeliveryBoyOTP
-from django.shortcuts import render, redirect
 from django.core.mail import send_mail
-from django.utils import timezone
-from .models import DeliveryBoy
+from django.utils.timezone import now
+
 
 ''' ADMIN '''
 
@@ -517,119 +515,117 @@ def cod_orders(request):
         'macanda/manager/cod_orders.html',
         {'orders': orders}
     )
-
-
+    
 def deliveryman_register(request):
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+        phone = request.POST.get('phone')
+        vehicle_no = request.POST.get('vehicle_no')
+
+        DeliveryMan.objects.create(
+            name=name,
+            email=email,
+            phone=phone,
+            vehicle_no=vehicle_no,
+        )
+
+        request.session['deliveryman_email'] = email  # 🔑 KEY LINE
+
+        return redirect('otp_verification')
+
     return render(request, 'macanda/manager/deliveryman_register.html')
 
 
+def edit_deliveryman(request, did):
+    delivery_man = DeliveryMan.objects.get(id=did)
+
+    if request.method == 'POST':
+        delivery_man.phone = request.POST.get('phone')
+        delivery_man.vehicle_no = request.POST.get('vehicle_no')
+
+        email = request.POST.get('email')
+        if email:  # 🔑 critical line
+            delivery_man.email = email
+
+        delivery_man.save()
+        return redirect('view_deliveryman')
+
+    return render(
+        request,
+        'macanda/manager/edit_deliveryman.html',
+        {'boy': delivery_man}
+    )
+
+
+def delete_deliveryman(request, did):
+    delivery_man = DeliveryMan.objects.get(id=did)
+    delivery_man.delete()
+    return redirect('view_deliveryman')
+
 def view_deliveryman(request):
-    return render(request, 'macanda/manager/view_deliveryman.html')
+    delivery_boys = DeliveryMan.objects.all()
+    return render(
+        request,
+        'macanda/manager/view_deliveryman.html',
+        {'delivery_boys': delivery_boys}
+    )
+def otp_verification(request):
+    email = request.session.get('deliveryman_email')
+    if not email:
+        return redirect('deliveryman_register')
+
+    if request.method == "POST":
+        otp = random.randint(100000, 999999)
+
+        deliveryman = DeliveryMan.objects.get(email=email)
+        deliveryman.otp = otp
+        deliveryman.save()
+
+        send_mail(
+            'OTP Verification',
+            f'Your OTP is {otp}',
+            settings.EMAIL_HOST_USER,
+            [email],
+            fail_silently=False,
+        )
+        return redirect('view_deliveryman')
+
+    return render(request, 'macanda/manager/otp_verification.html')
+
+ 
 
 ''' MANAGER MODULE'''
 
 def deliveryman_login(request):
+    if request.method == "POST":
+        email = request.POST.get('email')
+        otp = request.POST.get('otp')
+
+        try:
+            deliveryman = DeliveryMan.objects.get(email=email, otp=otp)
+            request.session['deliveryman_id'] = deliveryman.id
+            return redirect('deliveryman_dashboard')
+        except DeliveryMan.DoesNotExist:
+            return render(request, 'macanda/deliveryman/deliveryman_login.html', {
+                'error': 'Invalid email or OTP'
+            })
+
     return render(request, 'macanda/deliveryman/deliveryman_login.html')
 
-# def delivery_edit(request, id):
-#     try:
-#         boy = DeliveryBoy.objects.get(id=id)
-#     except DeliveryBoy.DoesNotExist:
-#         return HttpResponse("Delivery boy not found", status=404)
 
-#     if request.method == 'POST':
-#         boy.name = request.POST['name']
-#         boy.phone = request.POST['phone']
-#         boy.email = request.POST.get('email')
-#         boy.address = request.POST['address']
-#         boy.save()
-#         return redirect('delivery_register')
+def deliveryman_dashboard(request):
+    today = now().date()
 
-#     return render(request, 'macanda/manager/edit_delivery.html', {'boy': boy})
-# def delivery_delete(request, id):
-#     try:
-#         boy = DeliveryBoy.objects.get(id=id)
-#     except DeliveryBoy.DoesNotExist:
-#         return HttpResponse("Delivery boy not found", status=404)
-#     boy.delete()
-#     return redirect('delivery_register')
+    orders = Order.objects.filter(
+        created_at__date=today
+    ).order_by('-created_at')
 
-# # def delivery_list(request):
-# #     delivery_boys = DeliveryBoy.objects.all()
-# #     return render(request, 'macanda/manager/delivery_list.html', {
-# #         'delivery_boys': delivery_boys
-# #     })
-
-# def delivery_add(request):
-#     if request.method == 'POST':
-#         DeliveryBoy.objects.create(
-#             name=request.POST['name'],
-#             phone=request.POST['phone'],
-#             email=request.POST.get('email'),
-#             vehicle_no=request.POST['vehicle_no']
-#         )
-#         return redirect('delivery_register')
-
-#     return render(request, 'macanda/manager/delivery_add.html')
-
-
-# def delivery_send_otp(request):
-#     if request.method == 'POST':
-#         otp = str(random.randint(100000, 999999))
-#         phone = request.POST['phone']
-
-#         DeliveryBoyOTP.objects.create(
-#             phone=phone,
-#             otp=otp,
-#             expires_at=timezone.now() + timedelta(minutes=1)
-#         )
-
-#         # TEMP: print OTP in console (SMS later)
-#         print("OTP:", otp)
-
-#         request.session['delivery_data'] = request.POST.dict()
-#         return redirect('delivery_verify_otp')
-
-#     return render(request, 'macanda/manager/delivery_add.html')
-# def delivery_verify_otp(request):
-#     if request.method == 'POST':
-#         otp_entered = request.POST['otp']
-#         phone = request.session['delivery_data']['phone']
-
-#         try:
-#             record = DeliveryBoyOTP.objects.filter(phone=phone).latest('id')
-#         except DeliveryBoyOTP.DoesNotExist:
-#             return HttpResponse("OTP not found")
-
-#         if record.is_expired():
-#             return HttpResponse("OTP expired")
-
-#         if record.otp != otp_entered:
-#             return HttpResponse("Invalid OTP")
-
-#         data = request.session['delivery_data']
-
-#         DeliveryBoy.objects.create(
-#             name=data['name'],
-#             phone=data['phone'],
-#             email=data.get('email'),
-#             vehicle_no=data['vehicle_no']
-#         )
-
-#         record.delete()
-#         del request.session['delivery_data']
-
-#         return redirect('delivery_success')
-
-#     return render(request, 'macanda/manager/verify_otp.html')
-# def delivery_success(request):
-#     return render(request, 'macanda/manager/success.html')
-
-# def delivery_view(request):
-#     boys = DeliveryBoy.objects.all()
-#     return render(request, 'macanda/manager/delivery_view.html', {
-#         'boys': boys
-#     })
+    return render(
+        request,
+        'macanda/deliveryman/deliveryman_dashboard.html',
+        {'orders': orders}
+    )
 
 
 

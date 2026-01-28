@@ -133,7 +133,11 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 LOGIN_URL = 'user_login'
 
-EMAIL_HOST_USER = 'fathimajumanath.bs@gmail.com' 
-EMAIL_HOST_PASSWORD  = 'heir yqiz sawp mhfz'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'  
+EMAIL_HOST = 'smtp.gmail.com' 
+EMAIL_USE_TLS = True  
+EMAIL_PORT = 587  
+EMAIL_HOST_USER = 'fathimajumanath.bs@gmail.com'  
+EMAIL_HOST_PASSWORD = 'cnex dtpc ruck iwuh' 
 
 

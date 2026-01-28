@@ -9,9 +9,10 @@
         display: flex;
         justify-content: center;
         align-items: center;
+        gap: 30px;
     }
 
-    .register-card {
+    .card-box {
         width: 420px;
         background-color: #0f172a;
         padding: 35px;
@@ -19,57 +20,61 @@
         box-shadow: 0 12px 35px rgba(0, 0, 0, 0.45);
     }
 
-    .register-card h3 {
+    .card-box h3 {
         color: #ffffff;
         text-align: center;
         margin-bottom: 25px;
     }
 
-    label { color: #cbd5f5; }
+    .otp-link {
+        margin-top: 15px;
+        text-align: center;
+    }
+
+    .otp-link a {
+        color: #38bdf8;
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+    .otp-link a:hover {
+        text-decoration: underline;
+    }
 </style>
 
 <div class="register-wrapper">
-    <div class="register-card">
-        <h3>Delivery Man Registration</h3>
+    <form method="post" action="{% url 'deliveryman_register' %}">
+        {% csrf_token %}
 
-        <form method="post">
-            {% csrf_token %}
+        <!-- REGISTRATION CARD -->
+        <div class="card-box">
+            <h3>Delivery Man Registration</h3>
+            <p><a href="{% url 'manager' %}">Back to manager module</a></p>
 
             <div class="mb-3">
-                <label>Full Name</label>
-                <input type="text" class="form-control" name="name" required>
+                <input type="text" class="form-control" name="name" placeholder="Full Name" required>
             </div>
 
             <div class="mb-3">
-                <label>Email</label>
-                <input type="email" class="form-control" name="email" required>
+                <input type="email" class="form-control" name="email" placeholder="Email" required>
             </div>
 
             <div class="mb-3">
-                <label>Phone Number</label>
-                <input type="text" class="form-control" name="phone" required>
+                <input type="text" class="form-control" name="phone" placeholder="Phone Number" required>
             </div>
 
             <div class="mb-3">
-                <label>Vehicle Number</label>
-                <input type="text" class="form-control" name="vehicle_no" required>
+                <input type="text" class="form-control" name="vehicle_no" placeholder="Vehicle Number" required>
             </div>
 
-            <div class="mb-3">
-                <label>Password</label>
-                <input type="password" class="form-control" name="password" required>
-            </div>
-
-            <div class="mb-3">
-                <label>Confirm Password</label>
-                <input type="password" class="form-control" name="confirm_password" required>
-            </div>
-
+            <!-- REGISTER BUTTON -->
             <button type="submit" class="btn btn-primary w-100">
                 Register
             </button>
-        </form>
-    </div>
+
+         
+        </div>
+    </form>
 </div>
 
 {% endblock %}

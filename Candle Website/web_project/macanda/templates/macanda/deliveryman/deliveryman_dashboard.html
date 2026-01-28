@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deliveryman Dashboard</title>
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            margin: 0;
+            background-color: #1e293b;
+            color: #e5e7eb;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 50px auto;
+            background-color: #0f172a;
+            padding: 30px;
+            border-radius: 14px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+        }
+
+        h3 {
+            margin-bottom: 25px;
+            font-weight: 600;
+            color: #ffffff;
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            overflow: hidden;
+            border-radius: 10px;
+        }
+
+        thead {
+            background-color: #020617;
+        }
+
+        thead th {
+            padding: 14px;
+            font-size: 14px;
+            text-transform: uppercase;
+            color: #cbd5f5;
+        }
+
+        tbody td {
+            padding: 14px;
+            font-size: 14px;
+            border-bottom: 1px solid #1e293b;
+        }
+
+        tbody tr:hover {
+            background-color: #020617;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .text-muted {
+            color: #94a3b8;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container mt-5">
+
+    <h3 class="mb-4">Today’s Orders</h3>
+
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Customer</th>
+                <th>Product</th>
+                <th>Amount</th>
+                <th>Payment</th>
+                <th>Ordered Time</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in orders %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ order.user.username }}</td>
+                <td>{{ order.product.name }}</td>
+                <td>₹{{ order.amount }}</td>
+                <td>{{ order.payment_method }}</td>
+                <td>{{ order.created_at|time:"H:i" }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" class="text-center text-muted">
+                    No orders for today
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,40 @@
+{% extends 'macanda/manager/header.html' %}
+{% block content %}
+
+<div class="container mt-5">
+    <h3 class="mb-4">Edit Deliveryman</h3>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <input
+            type="email"
+            class="form-control mb-3"
+            name="email"
+            value="{{ boy.email }}"
+            required
+        >
+
+        <input
+            type="text"
+            class="form-control mb-3"
+            placeholder="New Phone Number"
+            name="phone"
+            value="{{ boy.phone }}"
+        >
+
+        <input
+            type="text"
+            class="form-control mb-3"
+            placeholder="New Vehicle Number"
+            name="vehicle_no"
+            value="{{ boy.vehicle_no }}"
+        >
+
+        <button class="btn btn-warning w-100">
+            Update Deliveryman
+        </button>
+    </form>
+</div>
+
+{% endblock %}

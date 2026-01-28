@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OTP Verification</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        * { box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { margin: 0; background-color: #1e293b; }
+        .otp-wrapper {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .card-box {
+            width: 420px;
+            background-color: #0f172a;
+            padding: 35px;
+            border-radius: 12px;
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.45);
+        }
+        .card-box h3 {
+            color: #ffffff;
+            text-align: center;
+            margin-bottom: 25px;
+            font-weight: 600;
+        }
+        .send-otp-btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            background-color: #22c55e;
+            color: #022c22;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+<div class="otp-wrapper">
+    <div class="card-box">
+        <h3>OTP Verification</h3>
+
+        <!-- CORRECT -->
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="send-otp-btn">
+                Send OTP
+            </button>
+        </form>
+
+    </div>
+</div>
+</body>
+</html>

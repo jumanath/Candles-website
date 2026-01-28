@@ -87,20 +87,13 @@ class Order(models.Model):
 
 
 # manager
-class DeliveryBoy(models.Model):
+
+class DeliveryMan(models.Model):
     name = models.CharField(max_length=100)
+    email = models.EmailField()
     phone = models.CharField(max_length=15)
-    email = models.EmailField(blank=True, null=True)
-    vehicle_no = models.CharField(max_length=20)
- # ← FIX
-
-class DeliveryBoyOTP(models.Model):
-    phone = models.CharField(max_length=15)
+    vehicle_no = models.CharField(max_length=50)
     otp = models.CharField(max_length=6)
-    expires_at = models.DateTimeField()
-
-    def is_expired(self):
-        return timezone.now() > self.expires_at
 
 
 

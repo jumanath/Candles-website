@@ -59,7 +59,7 @@ urlpatterns = [
 
     # MANGE_LOGIN
     re_path(r'user_login',views.user_login,name='user_login'),
-    re_path(r'register',views.register,name='register'),
+    re_path(r'^register/$',views.register,name='register'),
     re_path(r'logout',views.logout_view,name='logout'),
 
     # WISHLIST
@@ -88,15 +88,16 @@ urlpatterns = [
     re_path(r'paid-orders/$',views.paid_orders,name='paid_orders'),
     re_path(r'cod-orders/$',views.cod_orders,name='cod_orders'),
 
-    re_path(r'deliveryman_register',views.deliveryman_register,name='deliveryman_register'),
+    re_path(r'^deliveryman_register/$', views.deliveryman_register, name='deliveryman_register'),
     re_path(r'view_deliveryman',views.view_deliveryman,name='view_deliveryman'),
+    re_path(r'^edit_deliveryman/(\d+)/$', views.edit_deliveryman, name='edit_deliveryman'),
+    re_path(r'^delete_deliveryman/(\d+)/$',views.delete_deliveryman,name='delete_deliveryman'),
 
 # DELIVERYMAN
-    re_path(r'deliveryman_login',views.deliveryman_login,name='deliveryman_login')
+    re_path(r'deliveryman_login',views.deliveryman_login,name='deliveryman_login'),
+    re_path(r'otp_verification',views.otp_verification,name='otp_verification'),
+    re_path(r'deliveryman_dashboard', views.deliveryman_dashboard, name='deliveryman_dashboard'),
  
-
-
-
 
 
 ]
