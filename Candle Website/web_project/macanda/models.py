@@ -23,11 +23,7 @@ class Offer(models.Model):
 class carousalimage(models.Model):
     image=models.ImageField(upload_to='carousal/')
 
-# class footerimage(models.Model):
-#     image=models.ImageField(upload_to='footer/')
 
-# class headerimage(models.Model):
-#     image=models.ImageField(upload_to='header/')
 
 
 class fileupload(models.Model):

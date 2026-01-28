@@ -1,0 +1,74 @@
+{% extends 'macanda/User/base.html' %}
+{% block content %}
+
+<div class="container mt-5 mb-5">
+    <h3 class="mb-4">My Orders</h3>
+
+    {% if orders %}
+    <table class="table table-bordered text-center align-middle">
+        <thead class="table-dark">
+            <tr>
+                <th>#</th>
+                <th>Product</th>
+                <th>Image</th>
+                <th>Amount (₹)</th>
+                <th>Payment Method</th>
+                <th>Payment Status</th>
+                <th>Order Status</th>
+                <th>Ordered On</th>
+            </tr>
+        </thead>
+
+        <tbody>
+        {% for order in orders %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ order.product.name }}</td>
+                <td>
+                    <img src="{{ order.product.pdt_image.url }}"
+                         width="60" height="60">
+                </td>
+                <td>{{ order.amount }}</td>
+                <td>{{ order.payment_method }}</td>
+                <td>
+                    {% if order.payment_status == "Paid" %}
+                        <span class="badge bg-success">Paid</span>
+                    {% else %}
+                        <span class="badge bg-warning text-dark">
+                            {{ order.payment_status }}
+                        </span>
+                    {% endif %}
+                </td>
+
+                <!-- ONLY THIS PART IS CHANGED -->
+                <td>
+                    {% if order.status == "Delivered" %}
+                        <span class="badge bg-success">Delivered</span>
+
+                    {% elif order.status == "Cancelled" %}
+                        <span class="badge bg-danger">Cancelled</span>
+
+                    {% else %}
+                        <form method="post" action="{% url 'cancel_order' order.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-sm btn-danger">
+                                Cancel
+                            </button>
+                        </form>
+                    {% endif %}
+                </td>
+                <!-- CHANGE ENDS HERE -->
+
+                <td>{{ order.created_at|date:"d M Y" }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+        <div class="alert alert-info">
+            No orders found.
+        </div>
+    {% endif %}
+</div>
+
+{% endblock %}

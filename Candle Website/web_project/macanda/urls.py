@@ -72,6 +72,10 @@ urlpatterns = [
     re_path(r'^add_to_cart/(\d+)/$', views.add_to_cart, name='add_to_cart'),
     re_path(r'^remove_cart/(\d+)/$', views.remove_cart, name='remove_cart'),
 
+    # CHECKOUT
+    re_path(r'checkout',views.checkout,name='checkout'),
+    re_path(r'^cancel-order/(?P<order_id>\d+)/$', views.cancel_order, name='cancel_order'),
+
 # MANAGER
 
     # PAYMENT

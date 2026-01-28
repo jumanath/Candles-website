@@ -389,6 +389,33 @@ def remove_cart(request, cart_id):
     cart.objects.filter(id=cart_id, user=request.user).delete()
     return redirect('cart')
 
+@login_required
+def checkout(request):
+    orders = Order.objects.filter(
+        user=request.user
+    ).select_related('product').order_by('-created_at')
+
+    return render(
+        request,
+        'macanda/User/checkout.html',
+        {'orders': orders}
+    )
+
+
+@login_required
+def cancel_order(request, order_id):
+    if request.method == "POST":
+        try:
+            order = Order.objects.get(id=order_id, user=request.user)
+
+            if order.status != "Delivered":
+                order.status = "Cancelled"
+                order.save()
+
+        except Order.DoesNotExist:
+            pass
+
+    return redirect('checkout')
 
 
 ''' MANAGER MODULE'''
@@ -466,7 +493,7 @@ def save_order(request):
         payment_method = data["payment_method"]
         payment_status = data["payment_status"]
 
-        # 🔐 Server-side validation
+        #  Server-side validation
         if payment_method == "COD":
             payment_status = "Pending"
             order_status = "Confirmed"
@@ -530,7 +557,7 @@ def deliveryman_register(request):
             vehicle_no=vehicle_no,
         )
 
-        request.session['deliveryman_email'] = email  # 🔑 KEY LINE
+        request.session['deliveryman_email'] = email  
 
         return redirect('otp_verification')
 
@@ -545,7 +572,7 @@ def edit_deliveryman(request, did):
         delivery_man.vehicle_no = request.POST.get('vehicle_no')
 
         email = request.POST.get('email')
-        if email:  # 🔑 critical line
+        if email:  
             delivery_man.email = email
 
         delivery_man.save()
